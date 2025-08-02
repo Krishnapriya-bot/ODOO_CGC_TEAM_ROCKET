@@ -97,26 +97,30 @@
   </div>
 
   <div class="container">
-    {% for issue in issues %}
+  {% for issue in issues %}
+    <a href="{{ url_for('view_issue', issue_id=issue.id) }}" style="text-decoration: none; color: inherit;">
       <div class="issue-card">
         <h3>{{ issue.title }}</h3>
         <p><strong>Category:</strong> {{ issue.category }}</p>
         <p><strong>Status:</strong> <span class="status">{{ issue.status }}</span></p>
-        <p><strong>Description:</strong> {{ issue.description }}</p>
+        <p><strong>Description:</strong> {{ issue.description[:100] }}...</p>
         <p><strong>Reported on:</strong> {{ issue.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
         {% if issue.location_name %}
           <p><strong>Location:</strong> {{ issue.location_name }}</p>
         {% endif %}
-        {% if issue.photos %}
+        {% if issue.photos and issue.photos[0] %}
           <div class="photo-preview">
-            {% if issue.photos and issue.photos[0] %}
-                <img src="{{ issue.photos[0] }}" alt="Issue photo" />
-            {% endif %}
-
+            <img src="{{ issue.photos[0] }}" alt="Issue photo" />
           </div>
         {% endif %}
       </div>
-    {% endfor %}
-  </div>
+    </a>
+  {% endfor %}
+</div>
+
+</div>
+
+</a>
+
 </body>
 </html>

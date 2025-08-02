@@ -35,6 +35,9 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    
+    issues = db.relationship('Issue', back_populates='user')
+
 
 class Issue(db.Model):
     __tablename__ = 'issue'
@@ -53,6 +56,10 @@ class Issue(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     flagged_by = db.Column(db.PickleType, default=list)
     is_hidden = db.Column(db.Boolean, default=False)
+    
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', back_populates='issues')
+
 
     def to_dict(self):
         return {
@@ -126,8 +133,12 @@ def report():
         for photo in photos[:5]:
             if photo and photo.filename != "":
                 upload_result = cloudinary.uploader.upload(photo)
-                photo_urls.append(upload_result["secure_url"])  # This goes in DB
+                photo_urls.append(upload_result["secure_url"])
 
+        user_id = session.get("user_id")
+        if not user_id:
+            flash("You must be logged in to report an issue.")
+            return redirect(url_for("login"))
 
         new_issue = Issue(
             title=title,
@@ -138,7 +149,8 @@ def report():
             location_name=location_name,
             photos=photo_urls,
             anonymous=anonymous,
-            status="Reported"
+            status="Reported",
+            user_id=user_id
         )
         db.session.add(new_issue)
         db.session.commit()
@@ -146,6 +158,30 @@ def report():
         return redirect(url_for("home"))
 
     return render_template("report.html")
+
+@app.route('/edit_issue')
+def edit_issue():
+    return "Issue editing functionality is not implemented yet."
+
+@app.route("/issue/<int:issue_id>")
+def view_issue(issue_id):
+    issue = db.session.get(Issue, issue_id)  # or: Issue.query.get(issue_id)
+    if not issue:
+        abort(404)
+    return render_template("issue_page.html", issue=issue)
+
+
+@app.route('/profile')
+def profile():
+    if 'user_id' not in session:
+        flash("Please log in to view your profile.")
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    user_issues = Issue.query.filter_by(user_id=user.id).order_by(Issue.created_at.desc()).all()
+
+    return render_template('profile.html', user=user, issues=user_issues)
+
 
 @app.route('/issues')
 def view_all_issues():

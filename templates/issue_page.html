@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{ issue.title }}</title>
+  <style>
+    .photo-gallery img {
+      max-width: 300px;
+      margin: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h2>{{ issue.title }}</h2>
+  <p><strong>Category:</strong> {{ issue.category }}</p>
+  <p><strong>Status:</strong> {{ issue.status }}</p>
+  <p><strong>Description:</strong> {{ issue.description }}</p>
+
+  {% if issue.photos %}
+    <div class="photo-gallery">
+      {% for photo in issue.photos %}
+        <img src="{{ photo }}" alt="Issue photo">
+      {% endfor %}
+    </div>
+  {% endif %}
+</body>
+</html>
