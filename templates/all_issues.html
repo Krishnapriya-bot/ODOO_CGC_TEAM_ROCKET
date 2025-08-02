@@ -3,124 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <title>All Issues - CivicTrack</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='all_issues.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-    }
-
-    .navbar {
-      background-color: #2c3e50;
-      padding: 15px 30px;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .navbar h1 {
-      font-size: 20px;
-    }
-
-    .navbar a {
-      color: #ecf0f1;
-      text-decoration: none;
-      background-color: #3498db;
-      padding: 8px 12px;
-      border-radius: 5px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 20px;
-    }
-
-    .issue-card {
-      background-color: white;
-      border-radius: 10px;
-      padding: 15px 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    .issue-card h3 {
-      margin: 0;
-      font-size: 18px;
-      color: #2c3e50;
-    }
-
-    .issue-card p {
-      margin: 8px 0;
-      font-size: 14px;
-      color: #444;
-    }
-
-    .status {
-      display: inline-block;
-      background-color: #eee;
-      padding: 4px 8px;
-      border-radius: 5px;
-      font-size: 13px;
-      font-weight: bold;
-    }
-
-    .photo-preview {
-      margin-top: 10px;
-    }
-
-    .photo-preview img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 6px;
-      margin-top: 5px;
-    }
-
-  </style>
 </head>
 <body>
   <div class="navbar">
-    <h1>CivicTrack - All Issues</h1>
+    <h1>CivicTrack</h1>
     {% if session.get('user_id') %}
     <div class="user-info">
-      <span>Hello, {{ session.get('username') }}</span>
-      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="{{ url_for('profile') }}"><span>Hello, {{ session.get('username') }}</span></a>
       <a href="{{ url_for('report') }}">Report Issue</a>
-      <a href="/">Back to Map</a>
+      <a href="{{ url_for('view_all_issues') }}">View Issues</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
     </div>
-  {% else %}
-    <a href="{{ url_for('login') }}">Login</a>
-    <a href="{{ url_for('register') }}">Register</a>
-  {% endif %}
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
   </div>
 
   <div class="container">
-  {% for issue in issues %}
-    <a href="{{ url_for('view_issue', issue_id=issue.id) }}" style="text-decoration: none; color: inherit;">
-      <div class="issue-card">
-        <h3>{{ issue.title }}</h3>
-        <p><strong>Category:</strong> {{ issue.category }}</p>
-        <p><strong>Status:</strong> <span class="status">{{ issue.status }}</span></p>
-        <p><strong>Description:</strong> {{ issue.description[:100] }}...</p>
-        <p><strong>Reported on:</strong> {{ issue.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
-        {% if issue.location_name %}
-          <p><strong>Location:</strong> {{ issue.location_name }}</p>
-        {% endif %}
-        {% if issue.photos and issue.photos[0] %}
-          <div class="photo-preview">
-            <img src="{{ issue.photos[0] }}" alt="Issue photo" />
-          </div>
-        {% endif %}
-      </div>
-    </a>
-  {% endfor %}
-</div>
-
-</div>
-
-</a>
-
+    {% for issue in issues %}
+      <a href="{{ url_for('view_issue', issue_id=issue.id) }}" style="text-decoration: none; color: inherit;">
+        <div class="issue-card">
+          <h3>{{ issue.title }}</h3>
+          <p><strong>Category:</strong> {{ issue.category }}</p>
+          <p><strong>Status:</strong> <span class="status">{{ issue.status }}</span></p>
+          <p><strong>Description:</strong> {{ issue.description[:100] }}...</p>
+          <p><strong>Reported on:</strong> {{ issue.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+          {% if issue.location_name %}
+            <p><strong>Location:</strong> {{ issue.location_name }}</p>
+          {% endif %}
+          {% if issue.photos and issue.photos[0] %}
+            <div class="photo-preview">
+              <img src="{{ issue.photos[0] }}" alt="Issue photo" />
+            </div>
+          {% endif %}
+        </div>
+      </a>
+    {% endfor %}
+  </div>
 </body>
 </html>
