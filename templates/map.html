@@ -17,8 +17,8 @@
     <h1>CivicTrack</h1>
     {% if session.get('user_id') %}
     <div class="user-info">
-      <span>Hello, {{ session.get('username') }}</span>
-      <a href="{{ url_for('profile') }}">Profile</a>
+      
+      <a href="{{ url_for('profile') }}"><span>Hello, {{ session.get('username') }}</span></a>
       <a href="{{ url_for('report') }}">Report Issue</a>
       <a href="{{ url_for('view_all_issues') }}">View Issues</a>
       <a href="{{ url_for('logout') }}">Logout</a>

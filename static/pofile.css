@@ -1,0 +1,225 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #1D4B83;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Navbar */
+.navbar {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    color: #000000;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #FAAD23;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 500;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #1D4B83;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(250, 173, 35, 0.3);
+}
+
+.navbar a:hover {
+    background: #FAAD23;
+    color: #FFFFFF;
+    transform: translateY(-2px);
+    border-color: #FAAD23;
+}
+
+/* Profile container */
+.profile-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 2px solid rgba(250, 173, 35, 0.2);
+}
+
+/* Profile header */
+.profile-container h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1D4B83;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-bottom: 3px solid #FAAD23;
+    padding-bottom: 1rem;
+}
+
+/* User details */
+.profile-container > p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #394555;
+    padding: 1rem 1.5rem;
+    background: rgba(250, 173, 35, 0.1);
+    border-radius: 10px;
+    border-left: 4px solid #FAAD23;
+}
+
+.profile-container > p strong {
+    color: #1D4B83;
+    font-weight: 700;
+    display: inline-block;
+    min-width: 80px;
+    margin-right: 1rem;
+}
+
+/* Issues section header */
+.profile-container h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1D4B83;
+    margin: 2.5rem 0 1.5rem 0;
+    padding: 1rem 0;
+    border-bottom: 2px solid rgba(250, 173, 35, 0.3);
+}
+
+/* Issue cards */
+.issue {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(29, 75, 131, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid #1D4B83;
+}
+
+.issue:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(29, 75, 131, 0.15);
+}
+
+/* Done issues */
+.issue.done {
+    background: rgba(40, 167, 69, 0.08);
+    border-color: rgba(40, 167, 69, 0.3);
+    border-left-color: #28a745;
+}
+
+/* Issue content */
+.issue p {
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    color: #394555;
+}
+
+.issue p strong {
+    color: #1D4B83;
+    font-weight: 700;
+    display: inline-block;
+    min-width: 90px;
+    margin-right: 0.5rem;
+}
+
+/* Admin comment */
+.admin-comment {
+    background: rgba(250, 173, 35, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid #FAAD23;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/* Edit button */
+.edit-btn {
+    display: inline-block;
+    background: #FAAD23;
+    color: #FFFFFF;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.edit-btn:hover {
+    background: #e69d1e;
+    transform: translateY(-2px);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .user-info {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .profile-container {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+    
+    .profile-container h2 {
+        font-size: 2rem;
+    }
+    
+    .issue {
+        padding: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-container {
+        margin: 0.5rem;
+        padding: 1.5rem 1rem;
+    }
+    
+    .profile-container h2 {
+        font-size: 1.8rem;
+    }
+    
+    .profile-container > p strong,
+    .issue p strong {
+        display: block;
+        margin-bottom: 0.3rem;
+        min-width: auto;
+    }
+}

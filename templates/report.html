@@ -4,24 +4,21 @@
   <meta charset="UTF-8" />
   <title>Report an Issue - CivicTrack</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='report.css') }}">
 </head>
 <body>
     <div class="navbar">
     <h1>CivicTrack</h1>
     {% if session.get('user_id') %}
-    <div class="dropdown">
-      <img src="{{ url_for('static', filename='img/profile.png') }}" alt="Profile" width="32" height="32">
-      <div class="dropdown-content">
-        <a href="/profile">Profile</a>
-        <a href="/logout">Logout</a>
-      </div>
+    <div class="user-info">
+      <a href="{{ url_for('profile') }}"><span>Hello, {{ session.get('username') }}</span></a>
+      <a href="{{ url_for('report') }}">Report Issue</a>
       <a href="{{ url_for('view_all_issues') }}">View Issues</a>
-      <a href="/">Back to Map</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
     </div>
   {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
   {% endif %}
   </div>
   <div class="form-container">
@@ -44,7 +41,7 @@
         <option value="Obstructions">Obstructions</option>
       </select>
 
-      <label>Upload Photos (max 5):</label>
+      <label>Upload Photo:</label>
       <input type="file" name="photos" accept="image/*" multiple>
 
       <label>Location Name:</label>

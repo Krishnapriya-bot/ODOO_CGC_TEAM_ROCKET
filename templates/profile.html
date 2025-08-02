@@ -2,41 +2,15 @@
 <html>
 <head>
     <title>User Profile</title>
-    <style>
-        .profile-container {
-            max-width: 600px;
-            margin: 2rem auto;
-            padding: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        .issue {
-            border: 1px solid #999;
-            padding: 1rem;
-            margin-top: 1rem;
-            border-radius: 5px;
-        }
-        .issue.done {
-            background-color: #e7f9e7;
-        }
-        .admin-comment {
-            margin-top: 0.5rem;
-            font-style: italic;
-            color: #444;
-        }
-        .edit-btn {
-            display: inline-block;
-            margin-top: 0.5rem;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pofile.css') }}">
+
 </head>
 <body>
     <div class="navbar">
     <h1>CivicTrack</h1>
     {% if session.get('user_id') %}
     <div class="user-info">
-      <span>Hello, {{ session.get('username') }}</span>
-      <a href="{{ url_for('profile') }}">Profile</a>
+      <a href="{{ url_for('profile') }}"><span>Hello, {{ session.get('username') }}</span></a>
       <a href="{{ url_for('report') }}">Report Issue</a>
       <a href="{{ url_for('view_all_issues') }}">View Issues</a>
       <a href="{{ url_for('logout') }}">Logout</a>

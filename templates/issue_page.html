@@ -2,14 +2,8 @@
 <html>
 <head>
   <title>{{ issue.title }}</title>
-  <style>
-    .photo-gallery img {
-      max-width: 300px;
-      margin: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='issue_page.css') }}">
+
 </head>
 <body>
   <h2>{{ issue.title }}</h2>
