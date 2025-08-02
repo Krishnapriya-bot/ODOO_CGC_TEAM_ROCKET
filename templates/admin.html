@@ -553,25 +553,6 @@
             <!-- Analysis Section -->
             <div id="analysis" class="content-section">
                 <h2>Issue Analytics</h2>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">247</div>
-                        <div class="stat-label">Total Issues</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">23</div>
-                        <div class="stat-label">Flagged</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">189</div>
-                        <div class="stat-label">Resolved</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">35</div>
-                        <div class="stat-label">In Progress</div>
-                    </div>
-                </div>
 
                 <div class="categories-section">
                     <h2 class="categories-title">Most Reported Categories</h2>
@@ -622,7 +603,7 @@
                                 <td><span class="flag-count {% if issue.flags|length == 0 %}flag-none{% elif issue.flags|length > 3 %}flag-high{% endif %}">{{ issue.flags|length }}</span></td>
                                 <td><span class="status-badge status-{{ issue.status.lower().replace('-', '') }}">{{ issue.status }}</span></td>
                                 <td class="action-cell">
-                                    <button class="action-btn flag-btn" onclick="viewFlags({{ issue.id }})">View Flags</button>
+                                    <button class="action-btn flag-btn">View Flags</button>
                                     {% if issue.flags|length > 3 %}
                                         <button class="action-btn ban-btn">Ban User</button>
                                     {% else %}
