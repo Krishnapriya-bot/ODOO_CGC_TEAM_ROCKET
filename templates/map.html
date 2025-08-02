@@ -82,45 +82,6 @@
         opacity: 0;
       }
     }
-    .report-card {
-  position: absolute;
-  top: 80px;
-  left: 30px;
-  max-width: 250px;
-  background: white;
-  color: #333;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  padding: 16px 20px;
-  z-index: 999;
-  font-family: sans-serif;
-}
-
-.report-card h3 {
-  margin-top: 0;
-  font-size: 18px;
-}
-
-.report-card p {
-  font-size: 14px;
-  margin: 8px 0;
-}
-
-.report-btn {
-  display: inline-block;
-  padding: 8px 12px;
-  background-color: #e74c3c;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-  transition: background-color 0.2s ease;
-}
-
-.report-btn:hover {
-  background-color: #c0392b;
-}
-
   </style>
 </head>
 <body>
@@ -151,13 +112,18 @@
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <div class="hero-content">
+    <h1>CivicTrack</h1>
+    <h2>Does your neighborhood need Improvement?</h2>
+    <p>Report civic issues in your neighborhood and help make your community better through technology and collaboration.</p>
+    <a href="{{ url_for('register') }}" class="cta-button">Need Improvement !!</a>
+</div>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-  const map = L.map('map', {
-    zoomControl: false
-  }).setView([20.5937, 78.9629], 5); // Default center
+  <script>
+    const map = L.map('map', {
+      zoomControl: false
+    }).setView([20.5937, 78.9629], 5); // India centered
 
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://carto.com/">CartoDB</a>',
@@ -167,32 +133,21 @@
 
   L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
-  // 🔥 Add this fetch to show pins dynamically
-  fetch('/api/issues?lat=19.072&lng=72.873&distance=5')
-    .then(res => res.json())
-    .then(issues => {
-      console.log("Fetched issues:", issues);
-      issues.forEach(issue => {
-        console.log("Placing marker at:", issue.latitude, issue.longitude);
+    // Add a demo "ping" marker
+    const mumbai = [19.0760, 72.8777];
+    const marker = L.circleMarker(mumbai, {
+      radius: 8,
+      fillColor: "#e74c3c",
+      color: "#fff",
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.9
+    }).addTo(map).bindPopup("<strong>Mumbai</strong><br>Sample marker");
 
-        L.marker([issue.latitude, issue.longitude])
-          .addTo(map)
-          .bindPopup(`
-            <strong>${issue.title}</strong><br>
-            ${issue.category}<br>
-            <em>${issue.status}</em>
-          `);
-      });
-
-      // Optional: fly to the first issue’s location
-      if (issues.length > 0) {
-        map.flyTo([issues[0].latitude, issues[0].longitude], 15);
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching issues:", error);
-    });
-</script>
-
+    // Optional: flyTo after 2 seconds
+    setTimeout(() => {
+      map.flyTo(mumbai, 10);
+    }, 2000);
+  </script>
 </body>
 </html>
