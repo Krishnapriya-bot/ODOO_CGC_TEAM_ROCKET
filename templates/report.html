@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Report an Issue - CivicTrack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="form-container">
+    <h2>Report a Civic Issue</h2>
+
+    <form action="/report" method="POST" enctype="multipart/form-data">
+      <label>Title:</label>
+      <input type="text" name="title" required>
+
+      <label>Description:</label>
+      <textarea name="description" rows="4" required></textarea>
+
+      <label>Category:</label>
+      <select name="category" required>
+        <option value="Roads">Roads</option>
+        <option value="Lighting">Lighting</option>
+        <option value="Water Supply">Water Supply</option>
+        <option value="Cleanliness">Cleanliness</option>
+        <option value="Public Safety">Public Safety</option>
+        <option value="Obstructions">Obstructions</option>
+      </select>
+
+      <label>Upload Photos (max 5):</label>
+      <input type="file" name="photos" accept="image/*" multiple>
+
+      <label>Location Name:</label>
+      <input type="text" name="location_name" id="locationName" readonly required>
+
+      <label>Latitude:</label>
+      <input type="text" name="latitude" id="lat" required>
+
+      <label>Longitude:</label>
+      <input type="text" name="longitude" id="lng" required>
+
+      <label>
+        <input type="checkbox" name="anonymous"> Report Anonymously
+      </label>
+
+      <button type="submit">Submit Report</button>
+    </form>
+  </div>
+
+  <script>
+    // Fill lat/lng from browser
+    navigator.geolocation?.getCurrentPosition(pos => {
+      document.getElementById('lat').value = pos.coords.latitude.toFixed(6);
+      document.getElementById('lng').value = pos.coords.longitude.toFixed(6);
+
+      // Optional: get location name using reverse geocoding API
+      fetch(`https://nominatim.openstreetmap.org/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&format=json`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('locationName').value = data.display_name || "Unknown";
+        })
+        .catch(() => {
+          document.getElementById('locationName').value = "Unknown location";
+        });
+    });
+  </script>
+</body>
+</html>
