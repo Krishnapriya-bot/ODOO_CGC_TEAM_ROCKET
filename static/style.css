@@ -1,34 +1,281 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #e5b336 25%, #62a1f5 100%);
+    min-height: 100vh;
     display: flex;
-    height: 100vh;
     align-items: center;
     justify-content: center;
+    color: #000000;
+    position: relative;
 }
+
+/* Decorative background elements */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(137, 62, 62, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Container */
 .container {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-}
-input, button {
+    background: #FFFFFF;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.05);
     width: 100%;
-    margin: 10px 0;
-    padding: 10px;
+    max-width: 420px;
+    border: 3px solid #052750;
+    position: relative;
+    z-index: 1;
 }
-button {
-    background-color: #007BFF;
-    color: white;
+
+/* Container glow effect */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #FAAD23, #09274b, #FAAD23);
+    border-radius: 22px;
+    z-index: -1;
+    opacity: 0.3;
+}
+
+/* Heading */
+.container h2 {
+    color: #1D4B83;
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.container h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: #FAAD23;
+    border-radius: 2px;
+}
+
+/* Flash messages */
+.container ul {
+    background: linear-gradient(135deg, #1D4B83, #394555);
+    color: #FFFFFF;
+    padding: 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    list-style: none;
+    border-left: 4px solid #FAAD23;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container ul li {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Input fields */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    padding: 1rem 1.2rem;
+    border: 2px solid #394555;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #FFFFFF;
+    color: #000000;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #1D4B83;
+    box-shadow: 
+        0 0 0 3px rgba(29, 75, 131, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+input[type="text"]::placeholder,
+input[type="email"]::placeholder,
+input[type="password"]::placeholder {
+    color: #394555;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+/* Submit button */
+button[type="submit"] {
+    background: linear-gradient(135deg, #1D4B83, #394555);
+    color: #FFFFFF;
+    padding: 1.2rem;
     border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 12px rgba(29, 75, 131, 0.3);
+    position: relative;
+    overflow: hidden;
 }
-a {
-    color: #007BFF;
+
+button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #2a5a9e, #4a5a70);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(29, 75, 131, 0.4);
+}
+
+button[type="submit"]:hover::before {
+    left: 100%;
+}
+
+button[type="submit"]:active {
+    transform: translateY(-1px);
+}
+
+/* Login link */
+.container p {
+    text-align: center;
+    margin-top: 2rem;
+    color: #394555;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.container p a {
+    color: #1D4B83;
     text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    position: relative;
 }
-ul {
-    color: red;
-    padding-left: 0;
+
+.container p a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #FAAD23;
+    transition: width 0.3s ease;
+}
+
+.container p a:hover {
+    color: #FAAD23;
+}
+
+.container p a:hover::after {
+    width: 100%;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .container {
+        margin: 0;
+        padding: 2rem;
+        border-radius: 16px;
+    }
+    
+    .container h2 {
+        font-size: 1.9rem;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        padding: 0.9rem 1rem;
+        border-radius: 10px;
+    }
+    
+    button[type="submit"] {
+        padding: 1rem;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+}
+
+/* Additional animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.container {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+}
+
+button[type="submit"] {
+    animation: fadeInUp 0.6s ease-out;
+    animation-delay: 0.2s;
+    animation-fill-mode: both;
 }
