@@ -7,82 +7,9 @@
   
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+   <link rel="stylesheet" href="{{ url_for('static', filename='mapstyle.css') }}">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body, html {
-      height: 100%;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .navbar {
-      position: absolute;
-      top: 0;
-      width: 100%;
-      padding: 15px 25px;
-      background-color: rgba(44, 62, 80, 0.95);
-      color: #ecf0f1;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 999;
-    }
-
-    .navbar h1 {
-      font-size: 22px;
-      font-weight: 600;
-    }
-
-    .navbar a {
-      text-decoration: none;
-      color: #ecf0f1;
-      background-color: #3498db;
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-weight: bold;
-      transition: background-color 0.2s ease;
-    }
-
-    .navbar a:hover {
-      background-color: #2980b9;
-    }
-
-    #map {
-      position: absolute;
-      top: 60px;
-      bottom: 0;
-      width: 100%;
-    }
-
-    .ping {
-      height: 14px;
-      width: 14px;
-      background: #e74c3c;
-      border-radius: 50%;
-      position: absolute;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0% {
-        transform: scale(0.9);
-        opacity: 0.7;
-      }
-      70% {
-        transform: scale(1.6);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(0.9);
-        opacity: 0;
-      }
-    }
-  </style>
+ 
 </head>
 <body>
 
@@ -95,11 +22,18 @@
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <div class="hero-content">
+    <h1>CivicTrack</h1>
+    <h2>Does your neighborhood need Improvement?</h2>
+    <p>Report civic issues in your neighborhood and help make your community better through technology and collaboration.</p>
+    <a href="{{ url_for('register') }}" class="cta-button">Need Improvement !!</a>
+</div>
+
 
   <script>
     const map = L.map('map', {
       zoomControl: false
-    }).setView([20.5937, 78.9629], 5); // India centered
+    }).setView([20.5937, 78.9629], 8); // India centered
 
     // Add fancy dark tiles
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
@@ -114,18 +48,18 @@
     // Add a demo "ping" marker
     const mumbai = [19.0760, 72.8777];
     const marker = L.circleMarker(mumbai, {
-      radius: 8,
+      radius: 4,
       fillColor: "#e74c3c",
-      color: "#fff",
+      color: "#e74c3c",
       weight: 1,
       opacity: 1,
-      fillOpacity: 0.9
+      fillOpacity: 1
     }).addTo(map).bindPopup("<strong>Mumbai</strong><br>Sample marker");
 
     // Optional: flyTo after 2 seconds
     setTimeout(() => {
       map.flyTo(mumbai, 10);
-    }, 2000);
+    }, 1000);
   </script>
 </body>
 </html>
