@@ -26,7 +26,7 @@ with app.app_context():
 
 @app.route('/')
 def home():
-    return redirect(url_for('login'))
+    return render_template('map.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -66,7 +66,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             flash(f"Welcome, {username}!")
-            return "Logged in! (You can redirect to dashboard here)"
+            return redirect(url_for('home'))
         else:
             flash("Invalid credentials.")
             return redirect(url_for('login'))
