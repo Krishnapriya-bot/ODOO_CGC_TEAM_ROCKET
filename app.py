@@ -1,19 +1,34 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from geopy.distance import geodesic
+from datetime import datetime
 import os
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
+
+cloudinary.config(
+  cloud_name="dgtaf4krh",
+  api_key="781973345294475",
+  api_secret="vURcZBmjM3R_SFHmOoG4M6qVfbE"
+)
+
+
 # SQLite DB setup
 basedir = os.path.abspath(os.path.dirname(__file__))
+os.makedirs(os.path.join(basedir, 'db'), exist_ok=True)  # Ensure db directory exists
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db', 'app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# User model
+# ---------------- MODELS ---------------- #
+
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
@@ -21,12 +36,132 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(200), nullable=False)
 
+class Issue(db.Model):
+    __tablename__ = 'issue'
+    __table_args__ = {'extend_existing': True}
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
+    location_name = db.Column(db.String(200))  # Human-readable location
+    category = db.Column(db.String(50), nullable=False)
+    photos = db.Column(db.PickleType)
+    anonymous = db.Column(db.Boolean, default=False)
+    status = db.Column(db.String(20), default='Reported')
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    flagged_by = db.Column(db.PickleType, default=list)
+    is_hidden = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "location_name": self.location_name,
+            "category": self.category,
+            "photos": self.photos,
+            "status": self.status,
+            "anonymous": self.anonymous,
+            "created_at": self.created_at.isoformat()
+        }
+
 with app.app_context():
     db.create_all()
 
+# ---------------- ROUTES ---------------- #
 @app.route('/')
 def home():
-    return render_template('map.html')
+    return render_template('map.html', username=session.get('username'))
+
+
+@app.route('/api/issues')
+def get_issues():
+    user_lat = float(request.args.get('lat'))
+    user_lng = float(request.args.get('lng'))
+    max_distance_km = float(request.args.get('distance', 5))
+
+    all_issues = Issue.query.filter_by(is_hidden=False).all()
+
+    def within_radius(issue):
+        return geodesic((user_lat, user_lng), (issue.latitude, issue.longitude)).km <= max_distance_km
+
+    visible_issues = [issue.to_dict() for issue in all_issues if within_radius(issue)]
+    return jsonify(visible_issues)
+
+@app.route('/add_dummy')
+def add_dummy():
+    test_issue = Issue(
+        title="Broken Street Light",
+        description="Light not working on 5th Avenue",
+        latitude=19.072,
+        longitude=72.873,
+        location_name="5th Avenue, Mumbai",
+        category="Lighting",
+        photos=[],
+        status="Reported"
+    )
+    db.session.add(test_issue)
+    db.session.commit()
+    return "Dummy issue added!"
+
+@app.route("/report", methods=["GET", "POST"])
+def report():
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+        category = request.form.get("category")
+        latitude = float(request.form.get("latitude"))
+        longitude = float(request.form.get("longitude"))
+        location_name = request.form.get("location_name")
+        anonymous = request.form.get("anonymous") == "on"
+
+        # Handle photos
+        photos = request.files.getlist("photos")
+        photo_urls = []
+
+        for photo in photos[:5]:
+            if photo and photo.filename != "":
+                upload_result = cloudinary.uploader.upload(photo)
+                photo_urls.append(upload_result["secure_url"])  # This goes in DB
+
+
+        new_issue = Issue(
+            title=title,
+            description=description,
+            category=category,
+            latitude=latitude,
+            longitude=longitude,
+            location_name=location_name,
+            photos=photo_urls,
+            anonymous=anonymous,
+            status="Reported"
+        )
+        db.session.add(new_issue)
+        db.session.commit()
+        flash("Issue reported successfully.")
+        return redirect(url_for("home"))
+
+    return render_template("report.html")
+
+@app.route('/issues')
+def view_all_issues():
+    issues = Issue.query.filter_by(is_hidden=False).order_by(Issue.created_at.desc()).all()
+    return render_template('all_issues.html', issues=issues)
+
+def is_strong_password(password):
+    import re
+    return (
+        len(password) >= 8 and
+        re.search(r"[A-Z]", password) and
+        re.search(r"[a-z]", password) and
+        re.search(r"[0-9]", password) and
+        re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)
+    )
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -36,16 +171,22 @@ def register():
         phone = request.form['phone']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+        
+        errors = {}
 
         if password != confirm_password:
-            flash("Passwords do not match.")
-            return redirect(url_for('register'))
+            errors['password'] = "Passwords do not match."
 
-        # Check if user exists
+        if not is_strong_password(password):
+            errors['password'] = "Password must be at least 8 characters long and contain a special character, uppercase, lowercase letters, and numbers."
+
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
-            flash("Username already exists.")
-            return redirect(url_for('register'))
+            errors['username'] = "Username already exists."
+
+        if errors:
+            return render_template('register.html', errors=errors, 
+                                   username=username, email=email, phone=phone)
 
         hashed_password = generate_password_hash(password)
         new_user = User(username=username, email=email, phone=phone, password=hashed_password)
@@ -65,6 +206,8 @@ def login():
 
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['username'] = user.username
             flash(f"Welcome, {username}!")
             return redirect(url_for('home'))
         else:
@@ -72,6 +215,14 @@ def login():
             return redirect(url_for('login'))
 
     return render_template('login.html')
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully.")
+    return redirect(url_for('login'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

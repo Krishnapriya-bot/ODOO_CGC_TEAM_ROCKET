@@ -17,13 +17,23 @@
           {% endif %}
         {% endwith %}
         <form method="POST">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="text" name="phone" placeholder="Phone" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
-            <button type="submit">Register</button>
-        </form>
+  <input type="text" name="username" value="{{ username or '' }}" placeholder="Username">
+  {% if errors and errors.get('username') %}
+    <small style="color: red;">{{ errors['username'] }}</small>
+  {% endif %}
+
+  <input type="email" name="email" value="{{ email or '' }}" placeholder="Email">
+  <input type="text" name="phone" value="{{ phone or '' }}" placeholder="Phone">
+
+  <input type="password" name="password" placeholder="Password">
+  <input type="password" name="confirm_password" placeholder="Confirm Password">
+  {% if errors and errors.get('password') %}
+    <small style="color: red;">{{ errors['password'] }}</small>
+  {% endif %}
+
+  <button type="submit">Register</button>
+</form>
+
         <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
     </div>
 </body>

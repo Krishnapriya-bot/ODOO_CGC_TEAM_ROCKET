@@ -83,7 +83,17 @@
 <body>
   <div class="navbar">
     <h1>CivicTrack - All Issues</h1>
-    <a href="/">Back to Map</a>
+    {% if session.get('user_id') %}
+    <div class="user-info">
+      <span>Hello, {{ session.get('username') }}</span>
+      <a href="{{ url_for('logout') }}">Logout</a>
+      <a href="{{ url_for('report') }}">Report Issue</a>
+      <a href="/">Back to Map</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
+  {% endif %}
   </div>
 
   <div class="container">
@@ -99,9 +109,10 @@
         {% endif %}
         {% if issue.photos %}
           <div class="photo-preview">
-            {% for path in issue.photos %}
-              <img src="{{ url_for('static', filename=path.split('static/')[-1]) }}" alt="Issue Photo">
-            {% endfor %}
+            {% if issue.photos and issue.photos[0] %}
+                <img src="{{ issue.photos[0] }}" alt="Issue photo" />
+            {% endif %}
+
           </div>
         {% endif %}
       </div>
