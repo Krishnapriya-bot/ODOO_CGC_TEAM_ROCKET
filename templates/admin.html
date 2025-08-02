@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicTrack Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">CivicTrack</div>
+            <div class="nav-item active" onclick="showSection('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="showSection('analytics')">Analytics</div>
+            <div class="nav-item" onclick="showSection('user-management')">User Management</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="profile">
+                    <i class="fa-regular fa-user"></i>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard" class="content-section active">
+                <div class="filters">
+                    <div class="filter-dropdown">
+                        <button class="dropdown-btn" onclick="toggleDropdown('categories')">All Categories</button>
+                        <div id="categories" class="dropdown-content">
+                            <div onclick="selectFilter('categories', 'All Categories', '')">All Categories</div>
+                            <div onclick="selectFilter('categories', 'Roads', 'road')">Roads</div>
+                            <div onclick="selectFilter('categories', 'Lighting', 'lighting')">Lighting</div>
+                            <div onclick="selectFilter('categories', 'Water Supply', 'water')">Water Supply</div>
+                            <div onclick="selectFilter('categories', 'Cleanliness', 'cleanliness')">Cleanliness</div>
+                            <div onclick="selectFilter('categories', 'Public Safety', 'safety')">Public Safety</div>
+                            <div onclick="selectFilter('categories', 'Obstructions', 'obstructions')">Obstructions</div>
+                        </div>
+                    </div>
+                    <div class="filter-dropdown">
+                        <button class="dropdown-btn" onclick="toggleDropdown('status')">All Status</button>
+                        <div id="status" class="dropdown-content">
+                            <div onclick="selectFilter('status', 'All Status', '')">All Status</div>
+                            <div onclick="selectFilter('status', 'Reported', 'reported')">Reported</div>
+                            <div onclick="selectFilter('status', 'Resolved', 'resolved')">Resolved</div>
+                            <div onclick="selectFilter('status', 'In Progress', 'progress')">In Progress</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reports-table">
+                    <div class="table-header">Reports</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Location</th>
+                                <th>Images</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reports-tbody">
+                            <tr data-category="road" data-status="">
+                                <td>tony</td>
+                                <td>road</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>kalamboli</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-category="road" data-status="">
+                                <td>tony</td>
+                                <td>road</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>dombivali</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-category="road" data-status="">
+                                <td>tony</td>
+                                <td>road</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>kharghar</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-category="road" data-status="">
+                                <td>tony</td>
+                                <td>road</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>bhiwandi</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-category="road" data-status="">
+                                <td>tony</td>
+                                <td>road</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>gaziabadh</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-category="lighting" data-status="">
+                                <td>sarah</td>
+                                <td>lighting</td>
+                                <td><span class="view-btn">view</span></td>
+                                <td>kalamboli</td>
+                                <td>📎</td>
+                                <td>
+                                    <div class="status-dropdown">
+                                        <div class="current-status none"></div>
+                                        <button class="status-dots" onclick="toggleStatusDropdown(this)">⋮</button>
+                                        <div class="status-dropdown-content">
+                                            <div class="status-option reported" onclick="updateStatus(this, 'reported', 'Reported')">Reported</div>
+                                            <div class="status-option progress" onclick="updateStatus(this, 'progress', 'In Progress')">In Progress</div>
+                                            <div class="status-option resolved" onclick="updateStatus(this, 'resolved', 'Resolved')">Resolved</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <button class="page-btn">◀</button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analytics" class="content-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">1,247</div>
+                        <div class="stat-label">Total Issues</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">23</div>
+                        <div class="stat-label">Flagged</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">892</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">332</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                </div>
+
+                <div class="categories-section">
+                    <h2 class="categories-title">Most Reported Categories</h2>
+                    <div class="category-item">
+                        <div class="category-name">Roads</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-roads">342</div>
+                        </div>
+                        <div class="category-count">342</div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-name">Cleanliness</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-cleanliness">289</div>
+                        </div>
+                        <div class="category-count">289</div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-name">Lighting</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-lighting">234</div>
+                        </div>
+                        <div class="category-count">234</div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-name">Water Supply</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-water">182</div>
+                        </div>
+                        <div class="category-count">182</div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-name">Public Safety</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-safety">142</div>
+                        </div>
+                        <div class="category-count">142</div>
+                    </div>
+                    <div class="category-item">
+                        <div class="category-name">Obstructions</div>
+                        <div class="category-bar-container">
+                            <div class="category-bar bar-obstructions">58</div>
+                        </div>
+                        <div class="category-count">58</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Management Section -->
+            <div id="user-management" class="content-section">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="Search users..." onkeyup="searchUsers(this.value)">
+                </div>
+
+                <div class="users-list">
+                    <div class="user-item">
+                        <div class="user-info">
+                            <h3>user123</h3>
+                            <div class="user-stats">• <span class="flags-link" onclick="showFlagDetails('user123')">3 flags received</span> • Joined 2 months ago</div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="warn-btn" onclick="warnUser('user123')">send warning</button>
+                            <button class="ban-btn" onclick="banUser('user123')">ban user</button>
+                        </div>
+                    </div>
+
+                    <div class="user-item">
+                        <div class="user-info">
+                            <h3>spammer456</h3>
+                            <div class="user-stats">• <span class="flags-link" onclick="showFlagDetails('spammer456')">5 flags received</span> • Joined 1 week ago</div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="warn-btn" onclick="warnUser('spammer456')">send warning</button>
+                            <button class="ban-btn" onclick="banUser('spammer456')">ban user</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flag Details Modal -->
+    <div class="modal-overlay" id="flagModal">
+        <div class="flag-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Flag Details</h2>
+                <button class="close-btn" onclick="closeFlagModal()">×</button>
+            </div>
+            <div id="flagContent">
+                <!-- Flag details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables to store current filter states
+        let currentCategoryFilter = '';
+        let currentStatusFilter = '';
+
+        // Sample flag data for users
+        const userFlagsData = {
+            'user123': [
+                {
+                    type: 'spam',
+                    reason: 'User posted multiple duplicate reports for the same issue',
+                    date: '2024-07-15',
+                    reporter: {
+                        name: 'admin_mike',
+                        avatar: 'AM',
+                        details: 'Verified Admin • 2 years experience'
+                    }
+                },
+                {
+                    type: 'invalid',
+                    reason: 'Report contained false information about road conditions',
+                    date: '2024-07-20',
+                    reporter: {
+                        name: 'citizen_alex',
+                        avatar: 'CA',
+                        details: 'Active Reporter • Local Resident'
+                    }
+                },
+                {
+                    type: 'inappropriate',
+                    reason: 'Used offensive language in report description',
+                    date: '2024-07-25',
+                    reporter: {
+                        name: 'moderator_sarah',
+                        avatar: 'MS',
+                        details: 'Content Moderator • 1 year experience'
+                    }
+                }
+            ],
+            'spammer456': [
+                {
+                    type: 'spam',
+                    reason: 'Created multiple fake accounts to submit false reports',
+                    date: '2024-07-10',
+                    reporter: {
+                        name: 'system_auto',
+                        avatar: 'SA',
+                        details: 'Automated Detection System'
+                    }
+                },
+                {
+                    type: 'spam',
+                    reason: 'Posted irrelevant promotional content in reports',
+                    date: '2024-07-12',
+                    reporter: {
+                        name: 'admin_john',
+                        avatar: 'AJ',
+                        details: 'Senior Admin • 3 years experience'
+                    }
+                },
+                {
+                    type: 'invalid',
+                    reason: 'Submitted reports with fabricated location information',
+                    date: '2024-07-14',
+                    reporter: {
+                        name: 'verify_bot',
+                        avatar: 'VB',
+                        details: 'Location Verification Bot'
+                    }
+                },
+                {
+                    type: 'spam',
+                    reason: 'Mass reported legitimate user posts without cause',
+                    date: '2024-07-18',
+                    reporter: {
+                        name: 'citizen_mary',
+                        avatar: 'CM',
+                        details: 'Community Member • High Reputation'
+                    }
+                },
+                {
+                    type: 'inappropriate',
+                    reason: 'Harassment of other users in report comments',
+                    date: '2024-07-22',
+                    reporter: {
+                        name: 'safety_team',
+                        avatar: 'ST',
+                        details: 'Community Safety Team'
+                    }
+                }
+            ]
+        };
+
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav item
+            event.target.classList.add('active');
+            
+            // Update page title
+            const titles = {
+                'dashboard': 'Dashboard',
+                'analytics': 'Issue Analytics',
+                'user-management': 'User Management'
+            };
+            document.getElementById('page-title').textContent = titles[sectionId];
+        }
+
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function selectFilter(dropdownId, displayValue, filterValue) {
+            const dropdown = document.getElementById(dropdownId);
+            const btn = dropdown.previousElementSibling;
+            btn.childNodes[0].textContent = displayValue;
+            dropdown.style.display = 'none';
+            
+            // Update filter variables
+            if (dropdownId === 'categories') {
+                currentCategoryFilter = filterValue;
+            } else if (dropdownId === 'status') {
+                currentStatusFilter = filterValue;
+            }
+            
+            // Apply filters
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const rows = document.querySelectorAll('#reports-tbody tr');
+            
+            rows.forEach(row => {
+                const category = row.getAttribute('data-category');
+                const status = row.getAttribute('data-status');
+                
+                let showRow = true;
+                
+                // Check category filter
+                if (currentCategoryFilter && category !== currentCategoryFilter) {
+                    showRow = false;
+                }
+                
+                // Check status filter
+                if (currentStatusFilter && status !== currentStatusFilter) {
+                    showRow = false;
+                }
+                
+                // Show or hide row
+                if (showRow) {
+                    row.classList.remove('hidden-row');
+                } else {
+                    row.classList.add('hidden-row');
+                }
+            });
+        }
+
+        // Status dropdown functions
+        function toggleStatusDropdown(button) {
+            // Close all other status dropdowns first
+            document.querySelectorAll('.status-dropdown-content').forEach(dropdown => {
+                if (dropdown !== button.nextElementSibling) {
+                    dropdown.style.display = 'none';
+                }
+            });
+            
+            const dropdown = button.nextElementSibling;
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateStatus(option, statusValue, statusLabel) {
+            const dropdown = option.parentElement;
+            const statusContainer = dropdown.parentElement;
+            const currentStatusElement = statusContainer.querySelector('.current-status');
+            const dotsButton = statusContainer.querySelector('.status-dots');
+            const row = statusContainer.closest('tr');
+            
+            // Show and update the current status display
+            currentStatusElement.className = `current-status ${statusValue}`;
+            currentStatusElement.textContent = statusLabel;
+            currentStatusElement.style.display = 'inline-block';
+            
+            // Hide the three dots button after status is set
+            dotsButton.style.display = 'none';
+            
+            // Make the status badge clickable to change status again
+            currentStatusElement.onclick = function() {
+                dotsButton.style.display = 'inline-block';
+                toggleStatusDropdown(dotsButton);
+            };
+            
+            // Update the row's data attribute for filtering
+            row.setAttribute('data-status', statusValue);
+            
+            // Hide the dropdown
+            dropdown.style.display = 'none';
+            
+            // Reapply filters to check if row should still be visible
+            applyFilters();
+            
+            // Optional: Show confirmation or make API call here
+            console.log(`Status updated to: ${statusLabel}`);
+        }
+
+        // Flag details functions
+        function showFlagDetails(username) {
+            const modal = document.getElementById('flagModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const flagContent = document.getElementById('flagContent');
+            
+            modalTitle.textContent = `Flag Details for ${username}`;
+            
+            const userFlags = userFlagsData[username] || [];
+            
+            if (userFlags.length === 0) {
+                flagContent.innerHTML = '<p>No flags found for this user.</p>';
+            } else {
+                let flagsHtml = '';
+                userFlags.forEach((flag, index) => {
+                    flagsHtml += `
+                        <div class="flag-item">
+                            <div class="flag-header">
+                                <span class="flag-type ${flag.type}">${flag.type.toUpperCase()}</span>
+                                <span class="flag-date">${formatDate(flag.date)}</span>
+                            </div>
+                            <div class="flag-reason">${flag.reason}</div>
+                            <div class="flag-reporter">
+                                <div class="reporter-avatar">${flag.reporter.avatar}</div>
+                                <div class="reporter-info">
+                                    <div class="reporter-name">${flag.reporter.name}</div>
+                                    <div class="reporter-details">${flag.reporter.details}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                flagContent.innerHTML = flagsHtml;
+            }
+            
+            modal.style.display = 'block';
+        }
+
+        function closeFlagModal() {
+            document.getElementById('flagModal').style.display = 'none';
+        }
+
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        function warnUser(username) {
+            alert(`Sending warning to ${username}...`);
+        }
+
+        function banUser(username) {
+            alert(`Banning user ${username}...`);
+        }
+
+        function searchUsers(query) {
+            const userItems = document.querySelectorAll('.user-item');
+            userItems.forEach(item => {
+                const username = item.querySelector('h3').textContent.toLowerCase();
+                if (username.includes(query.toLowerCase())) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Close dropdowns and modals when clicking outside
+        document.addEventListener('click', function(event) {
+            // Close filter dropdowns
+            if (!event.target.matches('.dropdown-btn')) {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+            
+            // Close status dropdowns
+            if (!event.target.matches('.status-dots') && 
+                !event.target.closest('.status-dropdown-content') && 
+                !event.target.matches('.current-status')) {
+                document.querySelectorAll('.status-dropdown-content').forEach(dropdown => {
+                    dropdown.style.display = 'none';
+                });
+            }
+            
+            // Close modal when clicking on overlay
+            if (event.target.classList.contains('modal-overlay')) {
+                closeFlagModal();
+            }
+        });
+    </script>
+</body>
+</html>
