@@ -127,7 +127,17 @@
 
   <div class="navbar">
     <h1>CivicTrack</h1>
-    <a href="/login">Login / Register</a>
+    {% if session.get('user_id') %}
+    <div class="user-info">
+      <span>Hello, {{ session.get('username') }}</span>
+      <a href="{{ url_for('report') }}">Report Issue</a>
+      <a href="{{ url_for('view_all_issues') }}">View Issues</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  {% else %}
+    <a href="{{ url_for('login') }}">Login</a>
+    <a href="{{ url_for('register') }}">Register</a>
+  {% endif %}
   </div>
   <div class="report-card">
     <h3>See an issue?</h3>
