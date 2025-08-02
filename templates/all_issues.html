@@ -99,9 +99,10 @@
         {% endif %}
         {% if issue.photos %}
           <div class="photo-preview">
-            {% for path in issue.photos %}
-              <img src="{{ url_for('static', filename=path.split('static/')[-1]) }}" alt="Issue Photo">
-            {% endfor %}
+            {% if issue.photos and issue.photos[0] %}
+                <img src="{{ issue.photos[0] }}" alt="Issue photo" />
+            {% endif %}
+
           </div>
         {% endif %}
       </div>

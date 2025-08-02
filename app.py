@@ -5,9 +5,19 @@ from werkzeug.utils import secure_filename
 from geopy.distance import geodesic
 from datetime import datetime
 import os
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+
+
+cloudinary.config(
+  cloud_name="dgtaf4krh",
+  api_key="781973345294475",
+  api_secret="vURcZBmjM3R_SFHmOoG4M6qVfbE"
+)
+
 
 # SQLite DB setup
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -111,14 +121,13 @@ def report():
 
         # Handle photos
         photos = request.files.getlist("photos")
-        photo_paths = []
-        os.makedirs("static/uploads", exist_ok=True)
+        photo_urls = []
+
         for photo in photos[:5]:
-            if photo and photo.filename:
-                filename = secure_filename(photo.filename)
-                save_path = os.path.join("static/uploads", filename)
-                photo.save(save_path)
-                photo_paths.append(save_path)
+            if photo and photo.filename != "":
+                upload_result = cloudinary.uploader.upload(photo)
+                photo_urls.append(upload_result["secure_url"])  # This goes in DB
+
 
         new_issue = Issue(
             title=title,
@@ -127,7 +136,7 @@ def report():
             latitude=latitude,
             longitude=longitude,
             location_name=location_name,
-            photos=photo_paths,
+            photos=photo_urls,
             anonymous=anonymous,
             status="Reported"
         )
