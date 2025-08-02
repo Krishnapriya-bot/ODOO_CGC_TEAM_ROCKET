@@ -245,19 +245,35 @@ def login():
             session['user_id'] = user.id
             session['username'] = user.username
             flash(f"Welcome, {username}!")
-            return redirect(url_for('home'))
+            if user.email.endswith('@admin.com'):
+                return redirect('/admin')
+            else:
+                return redirect('/')
         else:
             flash("Invalid credentials.")
             return redirect(url_for('login'))
 
     return render_template('login.html')
 
-
 @app.route("/logout")
 def logout():
     session.clear()
     flash("Logged out successfully.")
     return redirect(url_for('login'))
+
+@app.route('/admin')
+def admin():
+    if 'user_id' not in session:
+        flash("Please log in to access the admin panel.")
+        return redirect(url_for('login'))
+
+    user = User.query.get(session['user_id'])
+    if not user or not user.email.endswith('@admin.com'):
+        flash("You do not have permission to access the admin panel.")
+        return redirect(url_for('home'))
+
+    issues = Issue.query.all()
+    return render_template('admin.html', issues=issues, username=user.username)
 
 
 if __name__ == '__main__':
