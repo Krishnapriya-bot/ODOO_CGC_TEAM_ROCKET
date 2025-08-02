@@ -10,6 +10,9 @@
   <p><strong>Category:</strong> {{ issue.category }}</p>
   <p><strong>Status:</strong> {{ issue.status }}</p>
   <p><strong>Description:</strong> {{ issue.description }}</p>
+    <form method="POST" action="{{ url_for('flag_issue', issue_id=issue.id) }}">
+    <button type="submit">Flag</button>
+</form>
 
   {% if issue.photos %}
     <div class="photo-gallery">

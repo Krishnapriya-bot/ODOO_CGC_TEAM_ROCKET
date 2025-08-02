@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from geopy.distance import geodesic
@@ -52,7 +53,7 @@ class Issue(db.Model):
     category = db.Column(db.String(50), nullable=False)
     photos = db.Column(db.PickleType)
     anonymous = db.Column(db.Boolean, default=False)
-    status = db.Column(db.String(20), default='Reported')
+    status = db.Column(db.String(20), default='Posted')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     flagged_by = db.Column(db.PickleType, default=list)
     is_hidden = db.Column(db.Boolean, default=False)
@@ -60,6 +61,7 @@ class Issue(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', back_populates='issues')
 
+    flags = db.relationship('Flag', backref='issue', lazy=True)
 
     def to_dict(self):
         return {
@@ -75,6 +77,15 @@ class Issue(db.Model):
             "anonymous": self.anonymous,
             "created_at": self.created_at.isoformat()
         }
+
+class Flag(db.Model):
+    __tablename__ = 'flags'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    issue_id = db.Column(db.Integer, db.ForeignKey('issue.id'))
+
+    user = db.relationship("User")
 
 with app.app_context():
     db.create_all()
@@ -149,7 +160,7 @@ def report():
             location_name=location_name,
             photos=photo_urls,
             anonymous=anonymous,
-            status="Reported",
+            status="Posted",
             user_id=user_id
         )
         db.session.add(new_issue)
@@ -273,7 +284,62 @@ def admin():
         return redirect(url_for('home'))
 
     issues = Issue.query.all()
-    return render_template('admin.html', issues=issues, username=user.username)
+
+    # 🧠 Status Counts
+    total_issues = len(issues)
+    flagged_issues = Issue.query.join(Flag).group_by(Issue.id).all()
+    resolved_issues = Issue.query.filter_by(status='Resolved').count()
+    in_progress_issues = Issue.query.filter_by(status='In-Progress').count()
+
+    # 🧠 Category counts
+    category_counts = db.session.query(
+        Issue.category, func.count(Issue.id)
+    ).group_by(Issue.category).all()
+
+    category_dict = {cat: count for cat, count in category_counts}
+
+    return render_template(
+        'admin.html',
+        issues=issues,
+        username=user.username,
+        total_issues=total_issues,
+        flagged_issues=flagged_issues,
+        resolved_issues=resolved_issues,
+        in_progress_issues=in_progress_issues,
+        category_dict=category_dict
+    )
+
+
+@app.route('/admin/update_status/<int:issue_id>', methods=['POST'])
+def change_status(issue_id):
+    new_status = request.form['status']
+    issue = Issue.query.get(issue_id)
+    if issue:
+        issue.status = new_status
+        db.session.commit()
+        flash(f"Status updated to {new_status}")
+    else:
+        flash("Issue not found")
+    return redirect(url_for('admin'))
+
+@app.route('/flag/<int:issue_id>', methods=['POST'])
+def flag_issue(issue_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    # Check if user has already flagged this issue
+    existing_flag = db.session.query(Flag).filter_by(user_id=session['user_id'], issue_id=issue_id).first()
+    if existing_flag:
+        flash('You have already flagged this issue.')
+        return redirect(url_for('home'))
+
+    # Create a new flag
+    new_flag = Flag(user_id=session['user_id'], issue_id=issue_id)
+    db.session.add(new_flag)
+    db.session.commit()
+
+    flash('Issue flagged successfully.')
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':
